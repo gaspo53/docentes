@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <title layout:title-pattern="$CONTENT_TITLE - $DECORATOR_TITLE" th:text="SiMor">SiMor</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+
+        <link rel="shortcut icon" th:href="@{/static/favicon.ico}" type="image/x-icon" />
+
+	    <script th:replace="common/js_messages"></script>
+	    <th:block th:if="${@environment.getActiveProfiles()[0] == 'DEVELOP'}">
+	       <div th:replace="_dev/dev_resources"></div>
+	    </th:block>
+	    <th:block th:if="${@environment.getActiveProfiles()[0] == 'PRODUCTION'}">
+	        <link rel="stylesheet" type="text/css" media="all" th:href="@{/static/css/application.min.css}" />
+	        <script th:src="@{/static/js/application.min.js}"></script>
+	    </th:block>
+    
+    </head>
+    <body>
+        <div th:replace="template/menu :: nav"></div>
+        <div class="container">
+            <div th:replace="this :: section_title"></div>
+            <div th:replace="template/flash_messages"></div>
+            <div th:replace="this :: content"></div>
+        </div>
+        <footer th:replace="template/footer"></footer>
+        <script th:inline="javascript">
+            var contextPath = [[@{/}]]
+             var FALSE_POSITIVE_CONFIRM =  [[#{validation.actions.falsePositive}]];
+            $(document).ready(function(){
+                var currentLocale = [[${#locale.language}]];
+                var validationRequiredMessage = [[#{validation.defaults.required}]];
+                var validationEqualToMessage = [[#{validation.defaults.equalTo}]];
+                init(validationRequiredMessage,validationEqualToMessage,currentLocale);
+            });
+        </script>
+        <script th:inline="javascript" layout:fragment="script"></script>
+    </body>
+</html>

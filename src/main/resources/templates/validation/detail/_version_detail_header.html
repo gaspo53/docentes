@@ -1,0 +1,83 @@
+ <div class="row"  th:with="colLgSize = ${#numbers.formatInteger(9 / rulesTypeCount,1)}">
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-aqua">
+            <div class="site-detail-title inner">
+                <h3 th:title="${site.alias}" th:text="${site.alias}">My site</h3>
+                <select id="versionSelect" data-site="${site.id}">
+                        <option th:each="actualVersion : ${site.versions}"
+                                value="${actualVersion.id}" 
+                                th:selected="${actualVersion == version}"
+                                th:disabled="${not actualVersion.isValidated()}"
+                                th:text="#{forms.site.version(${actualVersion.number})}">
+                                Version 1
+                        </option>
+                </select>
+            </div>
+            <div class="icon">
+                <i class="ion ion-earth"></i>
+            </div>
+            <a href="#" class="small-box-footer" id="addVersion" th:text="#{titles.site.detail.newVersion}"> 
+                New version
+                &nbsp;<i class="fa fa-plus-circle"></i>
+            </a>
+        </div>
+    </div>
+    <div th:class="${'col-lg-'+colLgSize+' col-xs-6'}">
+        <div class="small-box bg-green">
+            <div class="inner">
+                <h3> 
+                    <span th:text="${version.validation.validRulesRatio}">20%</span>
+                    &nbsp;<sup style="font-size: 20px">%</sup>
+                </h3>
+                <p th:text="#{titles.site.rulesPassed}">Rules passed</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-android-checkmark"></i>
+            </div>
+            <a th:href="@{/validation/html/valid/{validationId}(validationId=${version.validation.id})}" 
+               class="rule-detail-link small-box-footer">
+                <span th:text="#{titles.general.moreInfo}"></span>
+                &nbsp;<i class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+    <div th:class="${'col-lg-'+colLgSize+' col-xs-6'}" th:if="${version.validation.validRulesCount > 0}">
+        <div class="small-box bg-yellow">
+            <div class="inner">
+                <h3>
+                    <span th:text="${version.validation.subjectiveRulesRatio}">20%</span>
+                    &nbsp;<sup style="font-size: 20px">%</sup>
+                </h3>
+                <p th:text="#{titles.site.rulesWarning}">Rules with warnings</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-android-information"></i>
+            </div>
+            <a th:href="@{/validation/html/subjective/{validationId}(validationId=${version.validation.id})}" 
+               class="rule-detail-link small-box-footer">
+                <span th:text="#{titles.general.moreInfo}"></span>
+                &nbsp;<i class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+    <div th:class="${'col-lg-'+colLgSize+' col-xs-6'}" th:if="${version.validation.invalidRulesCount > 0}">
+        <div class="small-box bg-red">
+            <div class="inner">
+                <h3>
+                    <span th:text="${version.validation.invalidRulesRatio}">20%</span>
+                    &nbsp;<sup style="font-size: 20px">%</sup>
+                </h3>
+                <p th:text="#{titles.site.rulesNotPassed}">Invalid rules</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-android-hand"></i>
+            </div>
+            <a th:href="@{/validation/html/invalid/{validationId}(validationId=${version.validation.id})}" 
+               class="rule-detail-link small-box-footer">
+               <span th:text="#{titles.general.moreInfo}"></span>
+               &nbsp;<i class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>    
+ </div>

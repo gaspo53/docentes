@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="@{layout}">
+    <head>
+        <meta name="menu" content="user_home" />
+        <title th:text="#{titles.user.delete}">Delete profile</title>
+    </head>
+    <body>
+        <h1 class="page-header" 
+            th:text="#{titles.user.delete}"
+            th:fragment="section_title">Delete profile</h1>
+        <div th:fragment="content">
+            <div class="alert alert-warning">
+                <h4 th:text="#{titles.user.delete.alert}">Delete alert</h4>
+                <p th:text="#{titles.user.delete.alert.body}">Delete body</p>
+            </div>
+            <div class="col-md-6 col-md-offset-3">  
+                <form id="deleteAccountForm" class="form-app" action="${contextPath}/user/delete" method="post">
+                    <input type="hidden" name="token" value="${delete_account_token}" />
+                    
+                    <div class="form-group">
+                      <label for="password" th:text="#{messages.auth.signup.password}">Password</label> 
+                      <input type="password" class="form-control" name="password" id="password" required="required" 
+                             th:placeholder="#{messages.auth.signup.placeholder.password}"/>
+                    </div>
+                    
+                    <div class="form-actions">
+                      <a class="link" th:href="@{/user/profile}" th:text="#{forms.general.cancel}">
+                          Cancel
+                      </a>
+                      <button type="submit" class="btn btn-danger" th:text="#{forms.user.delete.submit}">
+                          Delete account
+                      </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script th:inline="script" layout:fragment="script">
+          $(function(){
+              setValidatorDefaults();
+              $("#deleteAccountForm").validate({
+              });
+          });
+        </script>
+    </body>
+</html>

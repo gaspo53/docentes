@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="@{layout}">
+    <head>
+        <meta name="menu" content="my_sites" />
+        <title th:text="#{titles.site.version.new(${site.alias})}">Add site version</title>
+    </head>
+    <body>
+        <h1 class="page-header" 
+            th:text="#{titles.site.version.new(${site.alias})}"
+            th:fragment="section_title">Add site version</h1>
+
+        <div class="row" th:fragment="content">
+            <div class="col-md-6 col-md-offset-3">
+                <form th:action="@{/site/addVersion}" id="siteForm" class="form-app"  method="post" role="form" >
+
+                    <input type="hidden" name="siteId" th:value="${site.id}" />
+                      
+                    <div class="form-group">
+                        <label for="rulePriority" th:text="#{forms.site.validation.rule_priotiry}">Validation type</label>
+                        <select class="form-control" name="validationType">
+                            <option th:each="rp : ${rule_priorities}" th:value="${rp}" 
+                                    th:text="#{${'titles.site.validation.validation_type.' + rp}}">WCAG2.0 - A</option>
+                        </select>
+                    </div>
+
+                    <div class="box box-info">
+                        <div class="box-header">
+                            <i class="fa ion-wrench"></i>
+                            <h3 class="box-title" th:text="#{titles.site.ignoreLink}">Ignore link</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="callout callout-warning">
+                                <h4 th:text="#{titles.site.ignoreLink.heading}">Ignore link heading</h4>
+                                <p th:text="#{titles.site.ignoreLink.heading.body}">Ignore link body</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="alias" th:text="#{forms.site.ignoreLink}">Ignore link</label>
+                                <div id="ignoreLinks">
+                                    <div class="list-item input-group" th:if="${#lists.isEmpty(ignoreLinks)}">
+                                        <input type="text" name="ignoreLinks" class="ignoreLink form-control no-validate" 
+                                                                              th:placeholder="#{forms.site.ignoreLink.placeholder}" 
+                                                                              autocomplete="off" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="list-remove btn btn-info" 
+                                                    th:text="#{forms.general.actions.remove}">
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <div class="list-item input-group" th:each="ignoreLink : ${ignoreLinks}">
+                                        <input type="text" name="ignoreLinks" class="ignoreLink form-control no-validate" 
+                                                                              value="${ignoreLink}"
+                                                                              th:placeholder="#{forms.site.ignoreLink.placeholder}" 
+                                                                              autocomplete="off" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="list-remove btn btn-info"
+                                                    th:text="#{forms.general.actions.remove}">
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-success list-add"
+                                        th:text="#{forms.general.actions.add}">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <a class="link" th:href="@{/site}" th:text="#{forms.general.cancel}">Cancel</a>
+                        <button type="submit" class="btn btn-primary" th:text="#{forms.general.save}">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script th:inline="javascript" layout:fragment="script">
+          function lastIgnoreLinkFocus(){
+              $(".ignoreLink").last().focus();
+          }
+
+          $(function(){
+              lastIgnoreLinkFocus();
+              setValidatorDefaults();
+              $("#siteForm").validate({
+                  rules: {
+                        url: {
+                          required: true,
+                          url: true
+                        }
+                  }
+              });
+              
+              $(".list-add").click(function(){
+                  var newItem = $("#ignoreLinks").children().first(".list-item").clone();
+                  $(newItem).children().first("input[name=ignoreLinks]").val("");
+                  $("#ignoreLinks").append(newItem);
+                  lastIgnoreLinkFocus();
+              });
+              
+              $("#ignoreLinks").on("click", ".list-remove", function(){
+                  var itemCount = $("#ignoreLinks").children().size();
+                      console.log("entra");
+                  if (itemCount > 1){
+                      $(this).closest(".list-item").remove();
+                  }
+                  lastIgnoreLinkFocus();
+              });      
+          });
+        </script>
+    </body>
+</html>

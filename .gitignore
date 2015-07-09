@@ -1,0 +1,20 @@
+target
+*.class
+.classpath
+.project
+.settings
+bin
+# Package Files #
+*.jar
+*.war
+*.ear
+/build
+/gradle
+/gradlew
+/gradlew.bat
+/settings.gradle
+/.gradle
+/target/
+/simor_jcs_cache/
+/phantomjsdriver.log
+/jsp/

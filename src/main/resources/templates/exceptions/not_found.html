@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="@{layout}">
+    <head>
+        <title th:text="#{errors.application.page_not_found.message}">Oops!</title>
+    </head>
+    <body>
+        <h1 class="page-header headline" 
+            th:text="#{errors.application.page_not_found.message}"
+            th:fragment="section_title">404</h1>
+
+        <div class="error-page" th:fragment="content">
+            <div class="error-content">
+                <h3>
+                    <i class="fa fa-warning text-yellow"></i>
+                    <span th:text="#{errors.application.page_not_found.message}">Error message</span>
+                </h3>
+                <p>
+                    <span th:text="#{errors.application.page_not_found.text}">Error text</span>
+                    <a th:href="@{/}" th:text="#{errors.application.return_to_dashboard}">
+                        Return to dashboard
+                    </a>
+                </p>
+            </div>
+        </div>
+    </body>
+</html>

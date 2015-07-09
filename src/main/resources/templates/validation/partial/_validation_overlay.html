@@ -1,0 +1,16 @@
+<!-- Modal -->
+<div class="modal fade" id="validationModal" tabindex="-1" role="dialog" 
+        aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="validationModalLabel" 
+                    th:text="#{titles.validation.html.modal}">Validation in progress</h4>
+            </div>
+            <div class="modal-body">
+                <div th:replace="common/loader_animation"></div>    
+            </div>
+            <div class="modal-footer" th:text="#{validation.html.modal.footer}"> Yay!</div>
+        </div>
+    </div>
+</div>

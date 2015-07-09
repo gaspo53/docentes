@@ -1,0 +1,63 @@
+# DEFAULT CACHE REGION
+jcs.default=DC
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=100
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.UseMemoryShrinker=false
+jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLifeSeconds=86400
+jcs.default.elementattributes.IdleTime=1800
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
+
+#AUXILIARY CACHES
+jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=${user.dir}/simor_jcs_cache
+jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.DC.attributes.MaxKeySize=1000000
+jcs.auxiliary.DC.attributes.MaxRecycleBinSize=5000
+jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
+jcs.auxiliary.DC.attributes.ShutdownSpoolTimeLimit=60
+
+#CACHE REGIONS
+
+##CSS CACHE
+jcs.region.cssCache=DC
+jcs.region.cssCache.cacheattributes= org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.cssCache.cacheattributes.MaxObjects=1000
+jcs.region.cssCache.cacheattributes.MemoryCacheName= org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.cssCache.cacheattributes.UseMemoryShrinker=false
+jcs.region.cssCache.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.region.cssCache.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.region.cssCache.cacheattributes.MaxSpoolPerRun=500
+jcs.region.cssCache.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.cssCache.elementattributes.IsEternal=false
+
+##CSS PARSED CACHE
+jcs.region.cssParsedCache=DC
+jcs.region.cssParsedCache.cacheattributes= org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.cssParsedCache.cacheattributes.MaxObjects=1000
+jcs.region.cssParsedCache.cacheattributes.MemoryCacheName= org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.cssParsedCache.cacheattributes.UseMemoryShrinker=false
+jcs.region.cssParsedCache.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.region.cssParsedCache.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.region.cssParsedCache.cacheattributes.MaxSpoolPerRun=500
+jcs.region.cssParsedCache.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.cssParsedCache.elementattributes.IsEternal=false
+
+##IMAGES CACHE
+jcs.region.imageCache=DC
+jcs.region.imageCache.cacheattributes= org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.imageCache.cacheattributes.MaxObjects=1000
+jcs.region.imageCache.cacheattributes.MemoryCacheName= org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.imageCache.cacheattributes.UseMemoryShrinker=false
+jcs.region.imageCache.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.region.imageCache.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.region.imageCache.cacheattributes.MaxSpoolPerRun=500
+jcs.region.imageCache.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.imageCache.elementattributes.IsEternal=false

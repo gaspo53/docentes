@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="@{layout}">
+    <head>
+        <meta name="menu" content="my_sites" />
+        <title th:text="#{titles.site.new}">New site</title>
+    </head>
+    <body>
+        <h1 class="page-header" 
+            th:text="#{titles.site.new}"
+            th:fragment="section_title">New site</h1>
+        <div class="col-md-6 col-md-offset-3" th:fragment="content">
+            <form action="#" th:action="@{/site/save}" id="siteForm" class="form-app" 
+                  method="post" role="form" th:object="${site}">
+
+                <div class="form-group">
+                    <label for="url" th:text="#{forms.site.url}">URL</label> 
+                    <input type="text" class="form-control" th:field="*{uri}"
+                           th:placeholder="#{forms.site.url.placeholder}" required="required" /> 
+                </div>
+				          
+                <div class="form-group">
+                    <label for="alias" th:text="#{forms.site.alias}">Alias</label>
+                    <input type="text" class="form-control" id="alias" th:field="*{alias}"
+                           th:placeholder="#{forms.site.alias.placeholder}" required="required" />
+                </div>
+      
+                <div class="form-actions">
+                    <a class="link" href="#" th:href="@{/site}" th:text="#{forms.general.cancel}">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary" th:text="#{forms.general.save}">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <script th:inline="javascript" layout:fragment="script">
+          $(function(){
+              setValidatorDefaults();
+              $("#siteForm").validate({
+                  rules: {
+                        uri: {
+                          required: true,
+                          url: true
+                        }
+                  }
+              });
+          });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="@{layout}">
+    <head>
+        <meta name="menu" content="my_sites" />
+        <title th:text="#{titles.site.resume}">My sites</title>
+    </head>
+    <body>
+        <h1 class="page-header" 
+            th:text="#{titles.site.resume}"
+            th:fragment="section_title">My sites</h1>
+        <div th:fragment="content">
+            <div class="row" th:fragment="sites-resume">
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-aqua">
+                        <div class="inner">
+                            <h3 th:text="${result.totalResults}">2</h3>
+                            <p th:text="#{titles.site.totalSites}">Total sites</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-earth"></i>
+                        </div>
+                        <a href="#" th:href="@{/site/new}" class="small-box-footer"> 
+                           <span th:text="#{titles.site.addSite}"></span>
+                           &nbsp;<i class="fa fa-plus-circle"></i>
+                        </a>
+                    </div>
+                 </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-xs-6">
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h3>53<sup style="font-size: 20px">%</sup></h3>
+                            <p th:text="#{titles.site.rulesPassed}">Rules passed</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-checkmark"></i>
+                        </div>
+                        <span class="small-box-footer">&nbsp;</span>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-xs-6">
+                    <div class="small-box bg-yellow">
+                        <div class="inner">
+                            <h3>17<sup style="font-size: 20px">%</sup></h3>
+                            <p th:text="#{titles.site.rulesWarning}">Rules with warnings</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-information"></i>
+                        </div>
+                        <span class="small-box-footer">&nbsp;</span>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-xs-6">
+                    <div class="small-box bg-red">
+                        <div class="inner">
+                            <h3>30<sup style="font-size: 20px">%</sup></h3>
+                            <p th:text="#{titles.site.rulesNotPassed}">Rules not passed</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-android-hand"></i>
+                        </div>
+                        <span class="small-box-footer">&nbsp;</span>
+                    </div>
+                </div>
+                <!-- ./col -->
+            </div>
+            <div th:unless="${#lists.isEmpty(result.result)}">
+                <div class="body-actions">
+                    <div class="btn-group">
+                        <button id="moreOptions" class="btn dropdown-toggle hidden" data-toggle="dropdown">
+                            <span th:text="#{forms.general.more}"></span>
+                            &nbsp;<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li data-batch="false"><a href="#" id="addVersion" th:text="#{forms.site.actions.addVersion}">Add version</a></li>
+                            <li data-batch="false"><a href="#" id="edit" th:text="#{forms.general.edit}">Edit</a></li>
+                            <li data-batch="true"><a href="#" id="delete" th:text="#{forms.site.actions.delete}">Delete</a></li>
+                        </ul>
+                    </div>    
+                </div>
+                <form id="siteActionsForm" action="" method="post">
+                    <div class="box">
+                        <div class="box-body no-padding" th:fragment="site-list">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAll"/></th>
+                                        <th style="width: 10px">#</th>
+                                        <th th:text="#{forms.site.alias}">Alias</th>
+                                        <th th:text="#{forms.site.url}">Url</th>
+                                        <th th:text="#{titles.site.validation.progress}">Progress</th>
+                                        <th style="width: 40px" th:text="#{titles.site.validation.total}">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="site : ${result.result}">
+                                        <td class="select">
+                                            <input type="checkbox" name="siteId" th:value="${site.id}" />
+                                        </td>                   
+                                        <td th:text="${count}">1</td>
+                                        <td>
+                                            <a href="#" th:href="@{/validation/site/{siteId}(siteId=${site.id})}" 
+                                               th:text="${site.alias}">Site alias</a>
+                                        </td>
+                                        <td>
+                                            <a th:href="${site.uri}" target="_new" th:text="${site.uri}">http://site.uri</a>
+                                        </td>
+                                        <td>
+                                            <div class="progress xs">
+                                                <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                                            </div>
+                                        </td>
+                                        <td><span class="badge bg-red">55%</span></td>
+                                    </tr>              
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="form-actions">
+                <a class="btn btn-primary" href="#" th:href="@{/site/new}" th:text="#{forms.general.add}">
+                    Add site
+                </a>
+            </div>          
+        </div>
+        <script th:inline="javascript" layout:fragment="script">
+            $(function(){
+                $("#addVersion").click(function(){
+                    $("#siteActionsForm").attr("action",[[@{/site/newVersion}]]);
+                    $("#siteActionsForm").submit();
+                });
+                $("#delete").click(function(){
+                    bootbox.confirm([[#{forms.site.actions.delete.confirm}]], function(result) {
+                        if (result){
+                          $("#siteActionsForm").attr("action",[[@{/site/delete}]]);
+                          $("#siteActionsForm").submit();
+                        }
+                    }); 
+                });
+                $("#edit").click(function(){
+                    $("#siteActionsForm").attr("action",[[@{/site/edit}]]);
+                    $("#siteActionsForm").submit();
+                });
+            })
+        </script>        
+    </body>
+</html>

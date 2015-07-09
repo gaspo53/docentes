@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="@{layout}">
+    <head>
+        <meta name="menu" content="user_home" />
+        <title th:text="#{titles.user.profile.edit}">User profile edit</title>
+    </head>
+    <body>
+        <h1 class="page-header" 
+            th:text="#{titles.user.profile.edit}"
+            th:fragment="section_title">
+            User profile edit
+        </h1>
+        <div th:fragment="content">
+            <div class="col-md-6 col-md-offset-3">
+                <form th:action="@{/user/profile/save}" id="editForm" class="form-app" 
+                      method="post" role="form" th:object="${user}">
+                  
+                    <input type="hidden" th:value="*{id}"/>
+                  
+                    <div class="form-group">
+                      <label for="username" th:text="#{messages.auth.signup.username}">Username</label> 
+                      <input type="text" class="form-control" id="username" th:value="*{username}" name="username" readonly="readonly" />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="name" th:text="#{messages.auth.signup.name}"> Name </label> 
+                      <input type="text" class="form-control" th:value="*{name}" name="name" id="name" required="required" />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="lastname" th:text="#{messages.auth.signup.lastname}">Last name</label> 
+                      <input type="text" class="form-control" th:value="*{lastname}" name="lastname" id="lastname" required="required" />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="email" th:text="#{messages.auth.signup.email}">Email</label> 
+                      <input type="email" class="form-control" th:value="*{email}" name="email" id="email" required="required"
+                             th:title="${emailValidation}"  />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="locale" th:text="#{messages.auth.signup.locale}"> Locale </label>       
+                        <select th:value="*{locale}" id="locale" name="locale" class="form-control">
+                            <option th:each="locale : ${localeList}" 
+                                    th:value="${locale.key}" 
+                                    th:text="${locale.value}">
+                                    English
+                            </option>
+                        </select>
+                    </div>                  
+                    <div class="form-actions">
+                        <a class="link" th:href="@{/user/profile}" th:text="#{forms.general.cancel}">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="profileEdit" th:text="#{forms.user.profile.save}">
+                            Save
+                        </button>
+                    </div>
+
+                    <a th:href="@{/user/delete}" class="btn btn-xs btn-danger" th:text="#{forms.user.delete.submit}">
+                        Delete
+                    </a>
+                  </form>
+              </div>
+          </div>
+    </body>
+    <script layout:fragment="script">
+        $(document).ready(function() {
+            setValidatorDefaults();
+            $("#editForm").validate({
+                  rules: {            
+                        passwordRepeat: {
+                          equalTo: "#password",
+                        }
+                    }});
+        });
+    </script>
+</html>
+  

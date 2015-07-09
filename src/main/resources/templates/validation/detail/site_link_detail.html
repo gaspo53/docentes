@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="@{layout}">
+    <head>
+        <meta name="menu" content="validate_html" />
+        <title th:text="#{titles.site.link.detail}">Site link validation result</title>
+    </head>
+    <body>
+        <h1 class="page-header" 
+            th:fragment="section_title">
+            Site link validation result
+            <th:block th:text="#{titles.validate_html}"></th:block>
+            &nbsp;- <a target="_blank" th:href="${siteLink.uri}" th:text="${siteLink.href}">Link href</a>
+        </h1>     
+        <div th:fragment="content" th:with="validation=${siteLink}">
+            <div th:include="validation/detail/partial/_default_validation_detail_header"
+                 th:with="type='link'"></div>
+            <div id="rulesContainer"></div>
+            <div th:replace="validation/detail/partial/_rule_loader_div"></div>
+            <form id="validationForm" action="${contextPath}/validation/html" method="post">
+                <input type="hidden" name="htmlValidationId" th:value="${validation.id}" />
+                <div class="form-group">
+                    <label for="url" th:text="#{forms.site.url}">URL</label> 
+                    <input type="text" class="form-control" id="uri" name="uri"
+                           th:placeholder="#{forms.site.html.url.placeholder}" required="required" 
+                           th:value="${validation.uri}" />
+                </div> 
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title" th:text="#{forms.site.html_code}">HTML code</h3>
+                    </div>
+                    <div class="box-body">
+                        <textarea id="htmlCode" name="htmlCode" th:text="${validation.htmlCode}"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a class="link" 
+                       th:href="@{/validation/site/{siteId}/{versionId}/(siteId=${siteLink.siteVersion.site.id},versionId=${siteLink.siteVersion.id})}"
+                       th:text="#{titles.general.backTo(${siteLink.siteVersion.site.alias})}">
+                    </a>
+                    <button type="submit" class="form-action-button btn btn-primary"
+                            th:text="#{titles.site.validation.link.download}">
+                    </button>
+                </div>
+            </form>
+        </div>
+        <script th:inline="javascript" layout:fragment="script">
+            $(function(){
+                initializeCodeMirror('htmlCode');
+                ruleDetailTrigger('.rule-detail-link','#rulesContainer','#ruleLoaderDiv');
+            });
+        </script>
+    </body>        
+</html>

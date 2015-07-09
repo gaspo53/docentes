@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="@{layout}">
+    <head>
+        <meta name="menu" content="validate_html" />
+        <title th:text="#{titles.validate_html}">HTML validation</title>
+    </head>
+    <body>
+        <h1 class="page-header" 
+            th:text="#{titles.validate_html}"
+            th:fragment="section_title">HTML validation</h1>
+        <div th:fragment="content">
+            <form action="#" th:action="@{/validation/html}" id="validationForm" method="post" role="form">  
+                <div class="margin-bottom">
+                    <div class="form-group">
+                        <label for="rulePriority" class="control-label" 
+                               th:text="#{forms.site.validation.rule_priotiry}">
+                            Validation Type
+                        </label>
+                        <select class="form-control" th:name="rulePriority">
+                            <option th:each="rp : ${rule_priorities}" th:value="${rp}" 
+                                    th:text="#{${'titles.site.validation.validation_type.' + rp}}">
+                                    Validation type
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="baseUri" class="control-label">
+                            <th:block th:text="#{forms.site.url}"></th:block>
+                            &nbsp;<i class="fa fa-question-circle" 
+                                     data-toggle="tooltip"
+                                     th:title="#{tooltips.validation.html.url}"></i>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" 
+                                    id="baseUri" name="baseUri" th:value="${baseUri}"
+                                    th:placeholder="#{forms.site.html.url.placeholder}"
+                                    th:autofocus="autofocus" /> 
+                            <span class="input-group-btn">
+                                <button id="obtainHtmlButton" class="btn btn-info btn-flat ladda-button disabled" 
+                                        data-style="expand-left" type="button">
+                                    <span class="ladda-label" th:text="#{form.labels.validation.html.obtain}">
+                                        Obtain HTML
+                                    </span>
+                                </button>
+                            </span>           
+                        </div>
+                    </div>
+                </div>
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title" th:text="#{forms.site.html_code}">HTML Code</h3>
+                    </div>
+                    <div class="box-body">
+                        <textarea th:id="htmlCode" th:name="htmlCode"
+                                  th:value="${htmlCode}" 
+                                  th:placeholder="#{forms.site.html_code.placeholder}"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="profileEdit"
+                            th:text="#{forms.site.form.submit}">Validate</button>
+                </div>
+            </form>
+            <div th:replace="validation/partial/_validation_overlay"></div>
+        </div>
+        <script th:inline="javascript" layout:fragment="script">
+        /*<![CDATA[*/
+            $(function(){
+                var cm = initializeCodeMirror('htmlCode');
+                var htmlCode = cm.getValue();
+                
+                setValidatorDefaults();
+                bindOnEnterEvent('#baseUri');
+                Ladda.bind('#obtainHtmlButton');
+
+                $('#validationForm').validate({
+                  rules: {
+                      baseUri: {
+                        required: true,
+                        url: true
+                      }
+                  }
+                });
+                
+                $('#baseUri').on('change',function(){
+                    var url = $('#baseUri').val(); 
+                    htmlCode = undefined;   
+                    if (isValidUrl(url)){
+                        $('#obtainHtmlButton').removeClass('disabled');
+                    }else{
+                        $('#obtainHtmlButton').addClass('disabled');
+                    }
+                });
+                
+                $('#obtainHtmlButton').on('click',function(){
+                    $.post([[@{/validation/getHtml/}]],{baseUri : $('#baseUri').val()},
+                        function(data) {
+                            cm.setValue(data);
+                            htmlCode = cm.getValue();
+                            Ladda.stopAll();
+                        }
+                    );
+                });
+
+                $('#baseUri').on('enterKey',function(e){
+                    var baseUri = $.trim($('#baseUri').val());
+                    if (isValidUrl(baseUri)){
+                        e.preventDefault();
+                        $('#obtainHtmlButton').trigger('click');
+                    }
+                });
+
+                $('#validationForm').on('submit',function(e){
+                    var baseUri = $.trim($('#baseUri').val());
+                    if ((_.isEmpty(htmlCode)) || (!isValidUrl(baseUri))){
+                        e.preventDefault();
+                        return false;
+                    }else{
+                        startValidationOverlay();
+                    }
+                });
+            });
+        /*]]>*/
+        </script>
+    </body>
+</html> 

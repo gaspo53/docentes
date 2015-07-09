@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="@{layout}">
+    <head>
+        <meta name="menu" content="validate_html" />
+        <title th:text="#{titles.validate_html}">HTML validation result</title>
+    </head>
+    <body>
+        <h1 class="page-header" 
+            th:text="#{titles.validate_html}"
+            th:fragment="section_title">HTML validation result</h1>
+        <div th:fragment="content">
+            <div id="htmlValidationRulesCount" 
+                 th:include="validation/detail/partial/_default_validation_detail_header" 
+                 th:with="type='html'"></div>
+            <div id="rulesContainer"></div>
+            <div th:replace="validation/detail/partial/_rule_loader_div"></div>
+            <form id="validationForm" th:action="@{/validation/html/report}" method="post">
+                <input type="hidden" name="htmlValidationId" th:value="${validation.id}" />
+                <div class="row">
+                    <div class="col-lg-6">
+		                <div class="box box-warning">
+		                    <div class="box-header">
+		                        <i class="fa fa-warning"></i>
+		                        <h3 class="box-title" th:text="#{forms.site.validation.rule_priotiry}">Validation type</h3>
+		                    </div>
+		                    <div class="box-body validation-detail-highlight centered-text"
+		                         th:text="#{${'titles.site.validation.validation_type.' + validation.ruleLevel}}">
+		                    </div><!-- /.box-body -->
+		                </div>
+                    </div>
+                    <div class="col-lg-6">
+		                <div class="box box-info">
+		                    <div class="box-header">
+		                        <i class="fa fa-globe"></i>
+		                        <h3 class="box-title" th:text="#{forms.site.url}">URL</h3>
+		                    </div>
+		                    <div class="box-body validation-detail-highlight centered-text">
+		                        <a class="link" target="_blank" 
+		                           th:href="${validation.baseUri}" th:text="${validation.baseUri}">URL</a>
+		                    </div><!-- /.box-body -->
+		                </div>
+                    </div>
+               </div>
+               <div class="row"> 
+                 <div class="col-md-8">
+    		        <div class="box box-primary">
+    		            <div class="box-header">
+    		                <h3 class="box-title" th:text="#{forms.site.html_code}">HTML code</h3>
+    		            </div>
+    		            <div class="box-body">
+    		                <textarea id="htmlCode" name="htmlCode" th:text="${validation.html}"></textarea>
+    		            </div>
+    		        </div>
+                </div>
+                <div class="col-md-4" 
+                     th:with="image_url=@{/validation/misc/html/image/{validationId}(validationId=${validation.id})}">
+                    <div class="box box-primary">
+                        <div class="box-header">
+                            <h3 class="box-title" th:text="#{general.label.screenshot}">Screenshot</h3>
+                        </div>
+                        <div class="box-body thumbnail screenshot"
+                             th:attr="data-image-url=${image_url}">
+                        </div>
+                    </div>
+                </div>   
+               </div>             
+		        <div class="form-actions">
+		            <button type="submit" class="form-action-button btn btn-primary"
+		                    th:text="#{titles.site.validation.link.download}">
+		                    Download report
+		            </button>
+	           </div>
+            </form>
+	    </div>
+		<script th:inline="javascript" layout:fragment="script">
+		    $(function(){
+		        var cm = initializeCodeMirror('htmlCode');
+		        ruleDetailTrigger('.rule-detail-link','#rulesContainer','#ruleLoaderDiv',cm);
+            cm.setSize('100%', 480);
+            //Load images
+            $('.screenshot').each(function(){
+              var img_url = $(this).attr('data-image-url');
+              var img = $('<img />').attr('src',img_url);
+              $(this).append(img);
+            })
+		    });
+		</script>
+	</body>        
+</html>
