@@ -161,7 +161,8 @@ public class EscuelasTest {
 					
 					Elements titulos = document.select("table[id=titulos] > tbody > tr");
 					Elements cursos = document.select("table[id=cursos] > tbody > tr");
-					
+					puntaje.getTitulos().clear();
+					puntaje.getCursos().clear();
 					titulos.stream().forEach(e -> {
 						Titulo titulo = new Titulo();
 						Elements tds = e.select("td");
