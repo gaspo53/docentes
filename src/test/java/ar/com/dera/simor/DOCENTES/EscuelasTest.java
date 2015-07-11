@@ -203,6 +203,7 @@ public class EscuelasTest {
 						puntaje.addCurso(curso);
 					});
 
+					System.out.println("Added cursos y titulos for "+puntaje.getDni());
 					this.puntajeAnualDocenteService.save(puntaje);
 				}catch(Exception e){
 					LogHelper.error(this,e);
