@@ -131,7 +131,7 @@ public class EscuelasTest {
 		int currentIndex = 0;
 
 		PuntajeAnualDocenteFilter filter = new PuntajeAnualDocenteFilter();
-		Result<PuntajeAnualDocente> result = this.puntajeAnualDocenteService.search(filter, new Page(currentIndex,1));
+		Result<PuntajeAnualDocente> result = this.puntajeAnualDocenteService.search(filter, new Page(currentIndex++,1));
 		List<PuntajeAnualDocente> puntajes = result.getResult();
 		Stack<PuntajeAnualDocente> stack = new Stack<PuntajeAnualDocente>();
 		stack.addAll(puntajes);
@@ -205,6 +205,11 @@ public class EscuelasTest {
 
 					System.out.println("Added cursos y titulos for "+puntaje.getDni());
 					this.puntajeAnualDocenteService.save(puntaje);
+					
+					result = this.puntajeAnualDocenteService.search(filter, new Page(currentIndex,1));
+					if (result.getTotalResults() > 0){
+						stack.push(result.getResult().get(0));
+					}
 				}catch(Exception e){
 					LogHelper.error(this,e);
 				}
