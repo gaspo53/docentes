@@ -1,17 +1,21 @@
 package ar.com.dera.simor.DOCENTES;
 
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +24,11 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+
+import ar.com.dera.simor.common.entities.DOCENTES.Curso;
 import ar.com.dera.simor.common.entities.DOCENTES.PuntajeAnualDocente;
 import ar.com.dera.simor.common.entities.DOCENTES.PuntajeAnualDocenteFilter;
+import ar.com.dera.simor.common.entities.DOCENTES.Titulo;
 import ar.com.dera.simor.common.exception.BusinessException;
 import ar.com.dera.simor.common.filter.Page;
 import ar.com.dera.simor.common.filter.Result;
@@ -51,7 +58,7 @@ public class EscuelasTest {
 	List<Integer> anios = IntStream.rangeClosed(2004, 2014).boxed().collect(Collectors.toList());
 	
 	@SuppressWarnings("unused")
-	@Test
+	@Ignore
 	public void getDocentesTest(){
 		String url = "http://servicios2.abc.gov.ar/servaddo/puntaje.anual.docente/redirector.cfm";
 		
@@ -94,7 +101,7 @@ public class EscuelasTest {
 										pda.setApellidoNombre(StringUtils.trim(StringUtils.substringBefore(nombre, "(")));
 										String cargo = tds.get(2).text();
 										String puntaje = tds.get(3).text();
-										pda.add(cargo, puntaje, distrito, String.valueOf(anio), String.valueOf(escuela), tipoEscuela);
+										pda.addPuntaje(cargo, puntaje, distrito, String.valueOf(anio), String.valueOf(escuela), tipoEscuela);
 												
 										try {
 											this.saveOrAddPuntaje(pda);
@@ -116,6 +123,97 @@ public class EscuelasTest {
 		}
 	}
 
+	
+	@Test
+	public void getTitulosYCursosTest(){
+		String url = "http://servicios2.abc.gov.ar/servaddo/titulos_y_cursos/compact/default.cfm?doc=RA==&documento=DNI_BASE_64=&db=aW5ncmUyMDE1&anio=Y2ZTZXJ2YWRkbzJlY2ZjMTY5NDkyMzI2MSRmdW5jQU5JT0A1NDgwZGM=&all=Kg==";
+		
+		int currentIndex = 0;
+
+		PuntajeAnualDocenteFilter filter = new PuntajeAnualDocenteFilter();
+		Result<PuntajeAnualDocente> result = this.puntajeAnualDocenteService.search(filter, new Page(currentIndex,1));
+		List<PuntajeAnualDocente> puntajes = result.getResult();
+		Stack<PuntajeAnualDocente> stack = new Stack<PuntajeAnualDocente>();
+		stack.addAll(puntajes);
+		try{
+			while (!stack.isEmpty()){
+				PuntajeAnualDocente puntaje = stack.pop();
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("anio", "");
+				params.put("documento", puntaje.getDni());
+				params.put("distrito", "");
+				params.put("tipo_org", "");
+				params.put("numero", "");
+				params.put("seleccion", "documento");
+				params.put("distrito_name", "");
+				params.put("tipoorg_name", "");
+				try{
+					String base64DNI = Base64.getEncoder().encodeToString(puntaje.getDni().getBytes());
+					String encodedURL = StringUtils.replace(url, "DNI_BASE_64", base64DNI);
+					Document document = Jsoup.connect(encodedURL)
+											 .timeout(6000)
+											 .data(params)
+											 .followRedirects(true)
+											 .userAgent("Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) AppleWebKit/48 (like Gecko) Safari/48")
+											 .referrer("http://servicios2.abc.gov.ar/servaddo/puntaje.anual.docente/puntaje.cfm")
+											 .cookie("CFID","12963638;expires=Mon, 24-Apr-2045 20:57:06 GMT;path=/")
+											 .post();
+					
+					Elements titulos = document.select("table[id=titulos] > tbody > tr");
+					Elements cursos = document.select("table[id=cursos] > tbody > tr");
+					
+					titulos.stream().forEach(e -> {
+						Titulo titulo = new Titulo();
+						Elements tds = e.select("td");
+						Element egreso = tds.get(0);
+						Element promedio = tds.get(1);
+						Element nroRegistro = tds.get(2);
+						Element denominacion = tds.get(3);
+						Element expedido = tds.get(4);
+						Element especOrient = tds.get(5);
+						Element resolucion = tds.get(6);
+						
+						titulo.setEgreso(egreso.text());
+						titulo.setPromedio(promedio.text());
+						titulo.setNroRegistro(nroRegistro.text());
+						titulo.setDenominacion(denominacion.text());
+						titulo.setExpedido(expedido.text());
+						titulo.setEspecOrient(especOrient.text());
+						titulo.setResolucion(resolucion.text());
+						
+						puntaje.addTitulo(titulo);
+					});
+					
+					cursos.stream().forEach(e -> {
+						Curso curso = new Curso();
+						Elements tds = e.select("td");
+						Element anio = tds.get(0);
+						Element denominacion = tds.get(1);
+						Element organismo = tds.get(2);
+						Element hs = tds.get(3);
+						Element resolucion = tds.get(4);
+						
+						curso.setAnio(anio.text());
+						curso.setDenominacion(denominacion.text());
+						curso.setOrganismo(organismo.text());
+						curso.setHs(hs.text());
+						curso.setResolucion(resolucion.text());
+						
+						puntaje.addCurso(curso);
+					});
+
+					this.puntajeAnualDocenteService.save(puntaje);
+				}catch(Exception e){
+					LogHelper.error(this,e);
+				}
+			}
+		}catch(Exception e){
+			LogHelper.error(this, e);
+		}		
+	}
+	
+	
+	//PRIVATE
 	private void saveOrAddPuntaje(PuntajeAnualDocente pda) throws BusinessException {
 		PuntajeAnualDocenteFilter filter = new PuntajeAnualDocenteFilter();
 		filter.setDni(pda.getDni());

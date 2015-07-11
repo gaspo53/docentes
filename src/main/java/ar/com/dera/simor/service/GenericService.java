@@ -33,7 +33,7 @@ public interface GenericService<E> {
 	 * @see {@link Filter}
 	 * @return Result
 	 */
-	Result<E> search(Filter filter, Page p)  throws BusinessException;
+	Result<E> search(Filter filter, Page p) ;
 
 	/**
 	 * Returns a Result containing the objects that match the current filter.

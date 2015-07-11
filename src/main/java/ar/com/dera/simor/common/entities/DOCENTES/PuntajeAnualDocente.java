@@ -20,10 +20,27 @@ public class PuntajeAnualDocente {
 	private String apellidoNombre;
 
 	private List<Puntaje> puntaje;
-
+	private List<Titulo> titulos;
+	private List<Curso> cursos;
+	
 	public PuntajeAnualDocente() {
 		this.id = ObjectId.get();
 		this.puntaje = new ArrayList<Puntaje>();
+		this.setTitulos(new ArrayList<Titulo>());
+		this.setCursos(new ArrayList<Curso>());
+	}
+	
+	public void addTitulo(Titulo titulo){
+		this.getTitulos().add(titulo);
+	}
+	
+	public void addCurso(Curso curso){
+		this.getCursos().add(curso);
+	}
+	
+	public void addPuntaje(String cargo, String puntaje, String distrito, String anio, String codigoEscuela, String tipoEscuela) {
+		Puntaje p = new Puntaje(cargo,puntaje,distrito, anio, codigoEscuela, tipoEscuela);
+		this.getPuntaje().add(p);
 	}
 	
 	
@@ -50,16 +67,20 @@ public class PuntajeAnualDocente {
 			builder.append("puntaje=");
 			builder.append(puntaje);
 		}
+		if (getTitulos() != null) {
+			builder.append("titulos=");
+			builder.append(getTitulos());
+			builder.append(", ");
+		}
+		if (getCursos() != null) {
+			builder.append("cursos=");
+			builder.append(getCursos());
+			builder.append(", ");
+		}
 		builder.append("]");
 		return builder.toString();
 	}
 
-
-	public void add(String cargo, String puntaje, String distrito, String anio, String codigoEscuela, String tipoEscuela) {
-		Puntaje p = new Puntaje(cargo,puntaje,distrito, anio, codigoEscuela, tipoEscuela);
-		this.getPuntaje().add(p);
-	}
-	
 
 	//Getters and setters
 	public String getDni() {
@@ -87,5 +108,21 @@ public class PuntajeAnualDocente {
 	public void setApellidoNombre(String apellidoNombre) {
 		this.apellidoNombre = apellidoNombre;
 	}
-	
+
+	public List<Titulo> getTitulos() {
+		return titulos;
+	}
+
+	public void setTitulos(List<Titulo> titulos) {
+		this.titulos = titulos;
+	}
+
+	public List<Curso> getCursos() {
+		return cursos;
+	}
+
+	public void setCursos(List<Curso> cursos) {
+		this.cursos = cursos;
+	}
+
 }

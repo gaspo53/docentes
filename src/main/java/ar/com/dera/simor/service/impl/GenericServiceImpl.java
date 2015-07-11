@@ -35,13 +35,8 @@ public abstract class GenericServiceImpl<E> implements GenericService<E> {
 	}
 	
 	@Override
-	public Result<E> search(Filter filter, Page p) throws BusinessException {
-		try {
-			return this.getDao().search(filter, p);
-		} catch (Exception e) {
-			LogHelper.error(this, e);
-			throw new BusinessException(e.getMessage());
-		}		
+	public Result<E> search(Filter filter, Page p) {
+		return this.getDao().search(filter, p);
 	}
 	
 	@Override
