@@ -206,7 +206,7 @@ public class EscuelasTest {
 					System.out.println("Added cursos y titulos for "+puntaje.getDni());
 					this.puntajeAnualDocenteService.save(puntaje);
 					
-					result = this.puntajeAnualDocenteService.search(filter, new Page(currentIndex,1));
+					result = this.puntajeAnualDocenteService.search(filter, new Page(currentIndex++,1));
 					if (result.getTotalResults() > 0){
 						stack.push(result.getResult().get(0));
 					}
