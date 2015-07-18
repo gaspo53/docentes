@@ -7,14 +7,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping;
+import org.springframework.web.servlet.view.XmlViewResolver;
 
 /**
  * Annotated web-config.<br>
@@ -43,6 +48,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	}
 
 	@Override
+	public void configureDefaultServletHandling(
+			DefaultServletHandlerConfigurer configurer) {
+		configurer.enable();
+	}
+	  
+	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
 		localeChangeInterceptor.setParamName("lang");
@@ -69,6 +80,20 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	    return registrationBean;
 	}
 
+	@Bean
+	public ControllerClassNameHandlerMapping  classNameHandlerMappingConfigurer(){
+		return new ControllerClassNameHandlerMapping();
+	}
+	
+	
+	@Bean
+	public XmlViewResolver xmlViewResolverConfigurer(){
+		XmlViewResolver bean = new XmlViewResolver();
+		Resource resource = new ClassPathResource("export-view.xml");  
+		bean.setLocation(resource);
+		return bean;
+	}
+	
 	//Getters and Setters
 	public Environment getEnv() {
 		return this.env;

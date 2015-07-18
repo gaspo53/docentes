@@ -14,7 +14,9 @@ import org.springframework.util.Assert;
  *
  */
 @Configuration
-@EnableAutoConfiguration
+@EnableAutoConfiguration(exclude = {
+        org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration.class,
+        org.springframework.boot.actuate.autoconfigure.ManagementSecurityAutoConfiguration.class})
 @ComponentScan(basePackages = {"ar.com.dera.simor"})
 public class Application extends SpringBootServletInitializer{
 	//http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle

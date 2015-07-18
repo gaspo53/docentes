@@ -43,9 +43,6 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 		appServlet.setLoadOnStartup(1);
 		appServlet.addMapping("/");
 		servletContext.addListener(new ContextLoaderListener(rootContext));
-		servletContext
-				.addFilter("securityFilter", new DelegatingFilterProxy("springSecurityFilterChain"))
-				.addMappingForUrlPatterns(null, false, "/*");
 
 		//Set the encoding forced to UTF-8
 		FilterRegistration charEncodingfilterReg = servletContext.addFilter("CharacterEncodingFilter", CharacterEncodingFilter.class);

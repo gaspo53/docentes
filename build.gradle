@@ -20,7 +20,7 @@ apply plugin: 'com.eriwen.gradle.js'
 
 
 jar {
-    baseName = 'simor'
+    baseName = 'docentes'
     version =  '0.5.0'
 }
 
@@ -52,7 +52,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-velocity')
     compile('org.springframework.boot:spring-boot-starter-data-mongodb')
     compile('org.thymeleaf.extras:thymeleaf-extras-springsecurity3')
-
+    compile('org.apache.poi:poi:3.12')
     compile('javax.mail:mail:1.4.7')
     compile('javax.servlet:javax.servlet-api:3.1.0')
     compile('com.google.guava:guava:17.0')
