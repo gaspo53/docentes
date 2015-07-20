@@ -24,8 +24,7 @@ public class ExportView extends AbstractExcelView {
 			HSSFWorkbook workbook, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
-		Result<PuntajeAnualDocente> result = (Result<PuntajeAnualDocente>) model
-				.get("result");
+		Result<PuntajeAnualDocente> result = (Result<PuntajeAnualDocente>) model.get("result");
 		// create a wordsheet
 		HSSFSheet sheet = workbook.createSheet("Puntaje anual docente (mas cursos y titulos)");
 
