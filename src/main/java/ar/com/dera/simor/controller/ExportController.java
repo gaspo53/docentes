@@ -29,9 +29,7 @@ public class ExportController extends AbstractController{
 	@RequestMapping(value="/export", method=RequestMethod.GET)
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,HttpServletResponse response) throws Exception {
 
-		Result<PuntajeAnualDocente> result = this.getService().search(new PuntajeAnualDocenteFilter(), new Page(0,10));
 		Map<String, Object> model = new HashMap<String,Object>();
-		model.put("result", result);
 		
 		return new ModelAndView("exportView", model);
 	}

@@ -11,8 +11,8 @@ public class Puntaje {
 
 	private String tipoEscuela;
 
-
 	private String cargo;
+	
 	private String puntaje;
 	
 	public Puntaje() {}
